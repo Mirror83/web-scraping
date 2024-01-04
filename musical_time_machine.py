@@ -1,13 +1,11 @@
+import datetime
+import re
 import sys
 
-import requests
-import re
-import datetime
-
-from bs4 import BeautifulSoup
-
 import dotenv
+import requests
 import spotipy
+from bs4 import BeautifulSoup
 from spotipy import SpotifyOAuth
 
 MIN_YEAR = 1900  # An arbitrarily set value
@@ -45,13 +43,41 @@ soup = BeautifulSoup(response.text, "lxml")
 
 all_song_title_h3 = soup.select("li.o-chart-results-list__item h3#title-of-a-story")
 
+song_title_list = []
+artist_list = []
+
 i = 0
 for h3 in all_song_title_h3:
     i += 1
+
     song_title = h3.get_text(strip=True)
+    song_title_list.append(song_title)
+
     artist = h3.find_next_sibling("span").get_text(strip=True)
+    artist_list.append(artist)
+
     print(f"{i}. {song_title} - {artist}")
 
 scope = "playlist-modify-private"
 spotify = spotipy.Spotify(auth_manager=SpotifyOAuth(scope=scope))
 user = spotify.me()
+
+search_results = [
+    spotify.search(f"track:{song_title} year:{year}",
+                   type="track", limit=1)
+    for song_title in song_title_list]
+
+track_uris = []
+for search_result in search_results:
+    for item in search_result["tracks"]["items"]:
+        track_uris.append(item["uri"])
+
+print(track_uris)
+
+playlist = spotify.user_playlist_create(user["id"], f"{date_string} Top 100",
+                                        description=f"The Billboard Top 100 tracks from {date_string}",
+                                        public=False)
+
+print(playlist)
+
+spotify.playlist_add_items(playlist["id"], track_uris)
