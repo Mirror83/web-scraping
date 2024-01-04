@@ -1,3 +1,7 @@
+"""
+Gets the 100 best movies from an article on Empire
+"""
+
 import requests
 from bs4 import BeautifulSoup
 
