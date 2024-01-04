@@ -70,6 +70,7 @@ search_results = [
 track_uris = []
 for search_result in search_results:
     for item in search_result["tracks"]["items"]:
+        # TODO: Find a way to match the correct artists to each song
         track_uris.append(item["uri"])
 
 print(track_uris)
