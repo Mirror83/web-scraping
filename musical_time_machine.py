@@ -3,7 +3,12 @@ import sys
 import requests
 import re
 import datetime
+
 from bs4 import BeautifulSoup
+
+import dotenv
+import spotipy
+from spotipy import SpotifyOAuth
 
 MIN_YEAR = 1900  # An arbitrarily set value
 
@@ -12,6 +17,8 @@ def display_err(msg: str) -> None:
     print(msg, file=sys.stderr)
     exit(1)
 
+
+print(dotenv.load_dotenv(".env"))
 
 date_string = input("Which date would you like to travel to? Type the date in the format YYYY-MM-DD: ")
 date_string = date_string.strip()
@@ -44,3 +51,7 @@ for h3 in all_song_title_h3:
     song_title = h3.get_text(strip=True)
     artist = h3.find_next_sibling("span").get_text(strip=True)
     print(f"{i}. {song_title} - {artist}")
+
+scope = "playlist-modify-private"
+spotify = spotipy.Spotify(auth_manager=SpotifyOAuth(scope=scope))
+user = spotify.me()
