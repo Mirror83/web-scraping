@@ -76,6 +76,15 @@ def send_bargain_email(current_price: float, product_name: str):
 
 
 load_dotenv()
+
+# TODO: Add support for more than one product
+# TODO: Extract email text into a (html) file template and replace the relevant info using code
+# TODO: Remove semi-hardcoded page urls and preferred prices and use a database instead
+# TODO: Perform the price against preferred price check for each of the products in the database
+# TODO: Provide the user a way to add and remove products from the database
+# TODO: Perform relevant error handling e.g in the case of a broken link or a website redesign
+#       (in which case the class names used for scraping will not work)
+
 preferred_price = 16_500
 
 page_url = os.environ["JUMIA_PRODUCT_URL"]  # Download page for a Shure SM7 mic
