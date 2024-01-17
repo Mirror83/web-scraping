@@ -8,6 +8,8 @@ import requests
 from bs4 import Tag, BeautifulSoup
 from dotenv import load_dotenv
 
+import email
+
 
 @dataclasses.dataclass
 class BargainEmailData:
@@ -73,10 +75,15 @@ def send_bargain_email(template_file: str | os.PathLike, data: BargainEmailData)
         to_address = data.to_address
         smtp.login(from_address, os.environ["MAIL_PASSWORD"])
 
+        msg = email.message.EmailMessage()
+
         subject = f"Jumia Price Tracker - Bargain Alert for {data.product_name}"
         body = fill_template(template_file, data)
+        msg["subject"] = subject
+        msg.set_type("text/html")
+        msg.add_attachment(body, subtype="html")
 
-        smtp.sendmail(from_address, to_address, msg=f"Subject:{subject}\n\n{body}")
+        smtp.send_message(msg, from_address, to_address)
 
     print("Email sent!")
 
@@ -117,7 +124,7 @@ load_dotenv()
 # TODO: 6. Perform relevant error handling e.g in the case of a broken link or a website redesign
 #       (in which case the class names used for scraping will not work)
 
-pref_price = 16_500
+pref_price = 1_200
 
 url = os.environ["JUMIA_PRODUCT_URL"]
 page = get_product_page(url)
