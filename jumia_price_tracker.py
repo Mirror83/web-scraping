@@ -116,9 +116,8 @@ def fill_template(template_path: str | os.PathLike[str], data: BargainEmailData)
 
 load_dotenv()
 
-# TODO: 1. Extract email text into a (html) file template and replace the relevant info using code
-# TODO: 2. Add support for more than one product
-# TODO: 3. Remove semi-hardcoded page urls and preferred prices and use a database instead
+# TODO: 2. Remove semi-hardcoded page urls and preferred prices and use a database instead
+# TODO: 3. Add support for more than one product
 # TODO: 4. Perform the price against preferred price check for each of the products in the database
 # TODO: 5. Provide the user a way to add and remove products from the database
 # TODO: 6. Perform relevant error handling e.g in the case of a broken link or a website redesign
